@@ -1,0 +1,97 @@
+import os
+import json
+
+src_file = open('/Users/yuejz/Desktop/pylog/log.txt', 'r')
+
+output_file_name = '/Users/yuejz/Desktop/pylog/output/log.txt'
+output_file_dir = os.path.split(output_file_name)[0]
+
+output_file_attr = '/Users/yuejz/Desktop/pylog/output/attr.txt'
+output_file_attr_dir = os.path.split(output_file_name)[0]
+
+if not os.path.isdir(output_file_dir):
+    os.makedirs(output_file_dir)
+if not os.path.exists(output_file_name):
+    os.system(r'touch %s' % output_file_name)
+
+
+if not os.path.isdir(output_file_attr_dir):
+    os.makedirs(output_file_attr_dir)
+if not os.path.exists(output_file_attr):
+    os.system(r'touch %s' % output_file_attr)
+
+
+
+
+
+ff = open(output_file_name,'r+')
+
+
+
+# 左括弧数量
+parentheses = 0
+#缓存事件日志
+cache = ''
+
+a = 0
+
+for line in src_file.readlines():
+    if('I/SA.SensorsDataAPI' in line):
+        #获取截断的坐标
+        if ('track event' in line):
+            a = line.index('track event')
+        strv = line[a:]
+        # print(strv)
+        if not 'track event' in strv:
+            if ('{' in strv):
+                parentheses = parentheses + 1
+                # print(parentheses)
+            if ('}' in strv):
+                parentheses = parentheses - 1
+                # print(parentheses)
+                if parentheses == 0:
+                    ff.write('}\n')
+            if parentheses > 0:
+                ff.write(line[a:])
+
+
+# out_str =
+
+strva = '{\n'
+
+ff = open(output_file_name,'r+')
+strv = '{\n' + ff.read() + '}'
+
+# strv = str.join('\n}')
+
+print(strv)
+json_dict = json.loads(strv)
+
+
+
+# jsonarray = json.dumps(strv)
+# strtype = jsonarray.index('type')
+# print(jsonarray)
+# print(strtype)
+
+
+
+
+# ffff = open('/Users/yuejz/Desktop/pylog/output/log.txt','r')
+# cachestr = ''
+# for line3 in ffff.readlines():
+#     print(line3.strip())
+#     #开始的地方
+#     if ('{' == line3):
+#         parentheses += 1
+#         print(parentheses)
+#         print(line3)
+#     if parentheses > 0:
+#         cachestr = cachestr + line3
+#         print(cachestr)
+#     #结束的地方
+#     if ('}' == line3 and parentheses == 0):
+#         parentheses -= 1
+
+
+
